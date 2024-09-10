@@ -1,5 +1,9 @@
+from datetime import datetime
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from rest_framework.exceptions import PermissionDenied
+from django.contrib.auth import authenticate
+
 from .models import User
 
 
@@ -37,10 +41,50 @@ def validate_signup(signup_data):
 
 
 def validate_update_user(user_data):
+    username = user_data.get('username')
     nickname = user_data.get('nickname')
+    email = user_data.get('email')
+    birth = user_data.get('birth')
+    # gender, introduction 입력은 생략 가능
+    gender = user_data.get('gender', '')
+    introduction = user_data.get('introduction', '')
 
-    # validation
-    if len(nickname) < 3:
-        return False, "닉네임임은 3자 이상으로 입력하세요."
-    if len(nickname) > 20:
-        return False, "닉네임은 20자 이내로 입력하세요."
+    # Email validation
+    if email:
+        try:
+            validate_email(email)
+        except ValidationError:
+            return False, "유효하지 않은 이메일 주소입니다."
+
+        if User.objects.filter(email=email).exists():
+            return False, "이미 사용 중인 이메일입니다."
+
+    # Username validation
+    if not username:
+        return False, "유저네임을 입력해 주세요."
+    
+    if User.objects.filter(username=username).exists():
+        return False, "이미 사용 중인 유저네임입니다."
+    
+    # nickname validation
+    if not nickname:
+        return False, "닉네임을 입력해 주세요."
+
+    # birth validation
+    if not birth:
+        return False, "생년월일을 입력해 주세요."
+    try:
+        datetime.strptime(birth, '%Y-%m-%d')
+    except ValueError:
+        return False, "유효하지 않은 생년월일 형식입니다. YYYY-MM-DD 형식으로 입력하세요."
+    return True, None
+
+def validate_delete_user(request_data, user):
+    password = request_data.get("password")
+    if not password:
+        return False, "비밀번호를 입력해 주세요."
+    
+    if not user.check_password(password):
+        return False, "비밀번호가 일치하지 않습니다."
+    
+    return True, None
