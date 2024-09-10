@@ -1,14 +1,23 @@
 **spartamarket_DRF**
 
 **📖 목차**
+
 프로젝트 소개
+
 주요기능
+
 개발기간
+
 기술스택
+
 서비스 구조
+
 API 명세서
+
 ERD
+
 프로젝트 파일 구조
+
 Trouble Shooting
 
 
