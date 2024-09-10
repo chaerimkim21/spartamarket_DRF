@@ -40,13 +40,17 @@ django-extensions
 ✔️ Language
 Python: 백엔드 로직, 데이터 처리 및 API 개발을 위한 언어.
 SQL: 데이터베이스 쿼리 및 관리에 사용.
+
 ✔️ Version Control
 Git: 소스 코드 버전 관리 시스템. 프로젝트의 버전 기록을 유지하고 협업을 지원함.
 GitHub: 원격 저장소 호스팅 서비스, 코드 리뷰 및 협업을 지원.
+
 ✔️ IDE
 Visual Studio Code: Python, JavaScript, HTML/CSS의 개발을 위한 통합 개발 환경. 확장성 높은 플러그인 시스템 지원.
+
 ✔️ Framework
 Django: Python 기반의 웹 프레임워크, Django REST Framework를 사용
+
 ✔️ DBMS
 SQLite: 가벼운 관계형 데이터베이스 관리 시스템. 파일 기반의 데이터베이스로, 설정과 유지 관리가 간편하며, 로컬 개발과 작은 규모의 배포에 적합.
 
@@ -105,6 +109,7 @@ SQLite: 가벼운 관계형 데이터베이스 관리 시스템. 파일 기반�
 
 
 **ERD**
+
 ![spartamarket_DRF ERD](https://github.com/user-attachments/assets/68fa5fdd-6d6f-4cee-b664-a178e268a664)
 
 
