@@ -44,8 +44,11 @@ Django
 SQLite
 
 **기타 도구 및 라이브러리**
+
 Git/GitHub
+
 django-extensions
+
 ✔️ Language
 Python: 백엔드 로직, 데이터 처리 및 API 개발을 위한 언어.
 SQL: 데이터베이스 쿼리 및 관리에 사용.
