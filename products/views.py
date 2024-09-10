@@ -35,8 +35,6 @@ class ProductListView(APIView):
             return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
 
         user = request.user
-        # product_data['author'] = user
-        # product = Product.objects.create(**product_data)
 
         serializer = ProductSerializer(data=product_data)
         if serializer.is_valid():
@@ -49,9 +47,9 @@ class ProductListView(APIView):
 class ProductDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def put(self, request, pk):
+    def put(self, request, productId):
         try:
-            product = validate_product_update(request, pk)
+            product = validate_product_update(request, productId)
         except PermissionDenied as e:
             return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
 
@@ -63,12 +61,12 @@ class ProductDetailView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
+    def delete(self, request, productId):
         try:
-            product = validate_product_update(request, pk)
+            product = validate_product_update(request, productId)
         except PermissionDenied as e:
             return Response({'error': str(e)}, status=status.HTTP_403_FORBIDDEN)
 
         product.delete()
-        data = {"pk": f"상품 {pk}이 삭제되었습니다."}
+        data = {"productId": f"상품 {productId}이 삭제되었습니다."}
         return Response(data, status=status.HTTP_200_OK)

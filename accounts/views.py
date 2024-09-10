@@ -119,3 +119,15 @@ class UserProfileView(APIView):
         
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+class UserPasswordChangeView(APIView):
+    def put(self, request):
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+
+        if not request.user.check_password(old_password):
+            return Response({"error": "비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        request.user.set_password(new_password)
+        request.user.save()
+        return Response({"success": True}, status=status.HTTP_200_OK)
