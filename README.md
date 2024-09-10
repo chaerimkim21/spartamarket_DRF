@@ -76,25 +76,51 @@ SQLite: 가벼운 관계형 데이터베이스 관리 시스템. 파일 기반�
 **API 명세서**
 1. Accounts API
 로그인 (Login)
+
+![로그인 기능](https://github.com/user-attachments/assets/baf6f29c-5aee-457d-8ef9-44d631cf347d)
+
 - Method: POST
 - Endpoint: /api/accounts/login/
 - Params: username, password
 
 로그아웃 (Logout)
+
+![로그아웃 기능](https://github.com/user-attachments/assets/fefc3cbc-625e-4c80-929d-51dc595fd937)
+
 - Method: POST
 - Endpoint: /api/accounts/logout/
 
 회원가입 (Signup)
+
+![회원가입 기능(포스트맨)](https://github.com/user-attachments/assets/ab4dcce6-2b5a-454b-9ab6-7c339704ab47)
+
+
 - Method: POST
 - Endpoint: /api/accounts/
 - Params: username, password, email, first_name, last_name, nickname, birth(optional), introduction(optional)
 
+프로필 조회
+
+![프로필 조회](https://github.com/user-attachments/assets/b8644bbf-9cd4-4a50-aac8-613d69d7eceb)
+
+
+- Method: GET
+- Endpoint**: /api/accounts/<str:username>
+
 프로필 수정 (Update Profile)
+
+![회원 정보 수정](https://github.com/user-attachments/assets/32f35a5e-ca56-4e0c-a466-b3d4b6a8c1ac)
+
+
 - Method: PUT
 - Endpoint: /api/accounts/<str:username>/
 - Params: username, email, nickname, birth(optional), introduction(optional)
 
 회원 탈퇴 (Delete Account)
+
+![회원 탈퇴 기능](https://github.com/user-attachments/assets/40e4e77d-35c2-4080-9ab6-c1b0bae1c403)
+
+
 - Method: DELETE
 - Endpoint: /api/accounts/
 - Params: password
@@ -102,20 +128,36 @@ SQLite: 가벼운 관계형 데이터베이스 관리 시스템. 파일 기반�
 
 2. Products API
 상품 목록 조회 (Products List)
+
+![상품 조회 기능](https://github.com/user-attachments/assets/128a0387-a4de-4b3f-917c-df98dcd33a24)
+
+
 - Method: GET
 - Endpoint: /api/products/
 
 상품 생성 (Create Product)
+
+![상품 등록 기능](https://github.com/user-attachments/assets/e3c41ba4-f98c-4927-a6e5-2983581c8fdc)
+
+
 - Method: POST
 - Endpoint: /api/products/
 - Params: title, content, image
 
 상품 수정 (Update Product)
+
+![상품 수정 기능](https://github.com/user-attachments/assets/6c5a896f-4d65-4ecb-ae21-0211c120d4f7)
+
+
 - Method: PUT
 - Endpoint: /api/products/<int:productId>/
 - Params: title, content, image
 
 상품 삭제 (Delete Product)
+
+![상품 삭제 기능](https://github.com/user-attachments/assets/22c109d0-7514-4bc6-b475-300e41ddd209)
+
+
 - Method: POST
 - Endpoint: /api/products/<int:productId>/
 
