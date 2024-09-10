@@ -1,4 +1,5 @@
 **spartamarket_DRF**
+
 **📖 목차**
 프로젝트 소개
 주요기능
@@ -9,6 +10,8 @@ API 명세서
 ERD
 프로젝트 파일 구조
 Trouble Shooting
+
+
 **👨‍🏫 프로젝트 소개**
 스파르타코딩클럽의 팀 프로젝트로 개발된 중고거래 플랫폼 SPARTAMARKET을 DRF로 구현한 프로젝트입니다. 사용자는 회원 가입 후, 자신의 물건을 등록하고 업로드된 상품을 조회할 수 있습니다.
 
@@ -19,8 +22,11 @@ Trouble Shooting
 
 판매할 물건 업로드 : 유저는 자신의 중고 물품을 등록하고 관리할 수 있습니다.
 
+
 **⏲️ 개발기간**
 2024.09.7(금) ~ 2024.09.10(수)
+
+
 **📚️ 기술스택**
 백엔드(Backend)
 Python
@@ -44,10 +50,12 @@ Django: Python 기반의 웹 프레임워크, Django REST Framework를 사용
 ✔️ DBMS
 SQLite: 가벼운 관계형 데이터베이스 관리 시스템. 파일 기반의 데이터베이스로, 설정과 유지 관리가 간편하며, 로컬 개발과 작은 규모의 배포에 적합.
 
+
 **서비스 구조**
 - 백엔드: 데이터 처리, 비즈니스 로직 및 API를 처리.
 - 데이터베이스: SQLite를 사용하여 사용자 및 상품 데이터를 저장 및 관리.
 - API: 프론트엔드와 백엔드 간의 데이터 교환을 처리.
+
 
 **API 명세서**
 1. Accounts API
@@ -94,6 +102,7 @@ SQLite: 가벼운 관계형 데이터베이스 관리 시스템. 파일 기반�
 상품 삭제 (Delete Product)
 - Method: POST
 - Endpoint: /api/products/<int:productId>/
+
 
 **ERD**
 ![spartamarket_DRF ERD](https://github.com/user-attachments/assets/68fa5fdd-6d6f-4cee-b664-a178e268a664)
