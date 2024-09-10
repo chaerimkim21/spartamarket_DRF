@@ -1,18 +1,23 @@
-from django.shortcuts import render, redirect
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import User
-from django.core.validators import validate_email
-from .validators import validate_signup, validate_update_user
+from .validators import validate_signup, validate_update_user, validate_delete_user
 from .serializers import UserSerializer
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
+
 class SignUpView(APIView):
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            # POST 요청(회원가입)에는 로그인 상태 불필요
+            return [AllowAny()]
+        return [IsAuthenticated()] # DELETE 요청에는 (회원 탈퇴) IsAuthenticated() 사용
+
     def post(self, request):
         is_valid, err_msg = validate_signup(request.data)
         if not is_valid:
@@ -27,6 +32,16 @@ class SignUpView(APIView):
             'refresh': str(refresh),
         }
         return Response(res_data)
+    
+    def delete(self, request):
+        user = request.user
+
+        is_valid, err_msg = validate_delete_user(request.data, user)
+        if not is_valid:
+            return Response({"error": err_msg}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user.delete()
+        return Response({"message": "회원 탈퇴 성공"}, status=status.HTTP_200_OK)
 
 
 class SignInView(APIView):
@@ -45,7 +60,7 @@ class SignInView(APIView):
             return Response(
                 {"error": "유효하지 않은 유저네임이나 비밀번호입니다." }, status=status.HTTP_400_BAD_REQUEST
             )
-    
+
         serializer = UserSerializer(user)
         res_data = serializer.data 
 
@@ -59,7 +74,19 @@ class SignInView(APIView):
 
 
 class SignOutView(APIView):
-    pass
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        refresh_token = request.data.get("refresh_token")
+
+        if refresh_token:
+            try:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response({"error": "Refresh token is required."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserProfileView(APIView):
@@ -71,12 +98,36 @@ class UserProfileView(APIView):
         return Response(serializer.data)
 
     def put(self, request, username):
-        user = User.objects.get(username=username)
-        is_valid, err_msg = validate_update_user(request.data)
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        nickname = request.data.get('nickname')
-        user.nickname = nickname
+        is_valid, err_msg = validate_update_user(request.data)
+        if not is_valid:
+            return Response({"error": err_msg}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user.username = request.data.get('username', user.username)
+        user.nickname = request.data.get('nickname', user.nickname)
+        user.email = request.data.get('email', user.email)
+        user.birth = request.data.get('birth', user.birth)
+        # gender, introduction 입력은 생략 가능
+        user.gender = request.data.get('gender', user.gender)
+        user.introduction = request.data.get('introduction', user.introduction)
+        
         user.save()
         
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+class UserPasswordChangeView(APIView):
+    def put(self, request):
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+
+        if not request.user.check_password(old_password):
+            return Response({"error": "비밀번호가 일치하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        request.user.set_password(new_password)
+        request.user.save()
+        return Response({"success": True}, status=status.HTTP_200_OK)
