@@ -34,8 +34,6 @@ class SignUpView(APIView):
         return Response(res_data)
     
     def delete(self, request):
-        print(request.user)  # 로그인한 user object
-        print(request.data)
         user = request.user
 
         is_valid, err_msg = validate_delete_user(request.data, user)

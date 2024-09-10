@@ -24,31 +24,25 @@ class ProductListView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        print("Request data:", request.data)
-        print("Request files:", request.FILES)
-
-        file = request.FILES.get('image')
-
-        json_data = {
+        product_data = {
             'title': request.data.get('title'),
             'content': request.data.get('content'),
-            'image': file
+            'image': request.FILES.get('image')
         }
 
-        is_valid, error_messages = validate_product_upload(json_data)
+        is_valid, error_messages = validate_product_upload(product_data)
         if not is_valid:
             return Response({"error": error_messages}, status=status.HTTP_400_BAD_REQUEST)
 
-        json_data['author'] = request.user.pk
+        user = request.user
+        # product_data['author'] = user
+        # product = Product.objects.create(**product_data)
 
-        serializer = ProductSerializer(data=json_data)
+        serializer = ProductSerializer(data=product_data)
         if serializer.is_valid():
             # authenticate된 user를 author로 설정
-            product = serializer.save(author=request.user)
-            if file:
-                product.image.save(file.name, file)  # 업로드된 file 저장
+            product = serializer.save(author=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
